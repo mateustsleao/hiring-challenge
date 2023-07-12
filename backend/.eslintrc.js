@@ -16,6 +16,7 @@ module.exports = {
   'ignorePatterns': [
     '.eslintrc.js',
     'jest-unit-config.js',
-    'jest-integration-config.js'
+    'jest-integration-config.js',
+    'jest.config.js',
   ],
 }
