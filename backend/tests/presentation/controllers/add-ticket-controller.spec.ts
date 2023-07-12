@@ -1,16 +1,50 @@
-describe('AddTicketController', () => {
-  test('should return 400 if no name is provided', async () => {
-    const { sut } = makeSut()
-    const httpRequest = {
-      body: {
-        description: 'any_description',
-        value: 100,
-        date: new Date(),
-      },
-    }
-    const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError('name'))
-  }
+import { AddTicketController, type AddTicketControllerRequest } from '@/presentation/controllers'
+import { faker } from '@faker-js/faker'
+import { ValidationSpy, AddTicketSpy } from '@/tests/presentation/mocks'
+
+import MockDate from 'mockdate'
+
+const mockRequest = (): AddTicketControllerRequest => ({
+  client: faker.person.firstName(),
+  issue: faker.lorem.sentence(),
+  status: 'open',
+  deadline: faker.date.soon()
+})
+
+interface SutTypes {
+  sut: AddTicketController
+  validationSpy: ValidationSpy
+  addTicketStub: AddTicketSpy
 
 }
+
+const makeSut = (): SutTypes => {
+  const validationSpy = new ValidationSpy()
+
+  const addTicketStub = new AddTicketSpy()
+
+  const sut = new AddTicketController(addTicketStub, validationSpy)
+  return {
+    sut,
+    validationSpy,
+    addTicketStub
+  }
+}
+
+describe('AddTicketController', () => {
+  beforeAll(() => {
+    MockDate.set(new Date())
+  })
+
+  afterAll(() => {
+    MockDate.reset()
+  })
+
+  test('should call AddTicket with correct values', async () => {
+    const { sut, addTicketStub } = makeSut()
+    const httpRequest = mockRequest()
+    sut.handle(httpRequest)
+    expect(addTicketStub.params).toEqual(httpRequest)
+  })
+}
+)
