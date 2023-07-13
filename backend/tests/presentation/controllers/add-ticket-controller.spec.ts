@@ -1,6 +1,6 @@
 import { AddTicketController, type AddTicketControllerRequest } from '@/presentation/controllers'
 import { ValidationSpy, AddTicketSpy } from '@/tests/presentation/mocks'
-import { badRequest, serverError } from '@/presentation/helpers'
+import { badRequest, noContent, serverError } from '@/presentation/helpers'
 import { faker } from '@faker-js/faker'
 
 import MockDate from 'mockdate'
@@ -61,5 +61,10 @@ describe('AddTicketController', () => {
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(badRequest(validationSpy.error))
   })
-}
-)
+
+  test('should return 204 on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(noContent())
+  })
+})
