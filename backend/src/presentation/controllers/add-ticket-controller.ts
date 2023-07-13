@@ -11,7 +11,9 @@ export class AddTicketController implements Controller {
   async handle (request: AddTicketControllerRequest): Promise<HttpResponse> {
     try {
       const error = this.validation.validate(request)
-      if (error !== null && error !== undefined) {
+      const hasError = error !== null && error !== undefined
+
+      if (hasError) {
         return badRequest(error)
       }
       await this.addTicket.add(request)
