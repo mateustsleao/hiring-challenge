@@ -1,6 +1,7 @@
 import { AddTicketController, type AddTicketControllerRequest } from '@/presentation/controllers'
-import { faker } from '@faker-js/faker'
 import { ValidationSpy, AddTicketSpy } from '@/tests/presentation/mocks'
+import { serverError } from '@/presentation/helpers'
+import { faker } from '@faker-js/faker'
 
 import MockDate from 'mockdate'
 
@@ -14,20 +15,20 @@ const mockRequest = (): AddTicketControllerRequest => ({
 interface SutTypes {
   sut: AddTicketController
   validationSpy: ValidationSpy
-  addTicketStub: AddTicketSpy
+  addTicketSpy: AddTicketSpy
 
 }
 
 const makeSut = (): SutTypes => {
   const validationSpy = new ValidationSpy()
 
-  const addTicketStub = new AddTicketSpy()
+  const addTicketSpy = new AddTicketSpy()
 
-  const sut = new AddTicketController(addTicketStub, validationSpy)
+  const sut = new AddTicketController(addTicketSpy, validationSpy)
   return {
     sut,
     validationSpy,
-    addTicketStub
+    addTicketSpy
   }
 }
 
@@ -41,10 +42,17 @@ describe('AddTicketController', () => {
   })
 
   test('should call AddTicket with correct values', async () => {
-    const { sut, addTicketStub } = makeSut()
+    const { sut, addTicketSpy } = makeSut()
     const httpRequest = mockRequest()
-    sut.handle(httpRequest)
-    expect(addTicketStub.params).toEqual(httpRequest)
+    await sut.handle(httpRequest)
+    expect(addTicketSpy.params).toEqual(httpRequest)
+  })
+
+  test('should return 500 if AddTicket throws', async () => {
+    const { sut, addTicketSpy } = makeSut()
+    jest.spyOn(addTicketSpy, 'add').mockImplementationOnce(() => { throw new Error() })
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 }
 )
