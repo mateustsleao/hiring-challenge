@@ -48,6 +48,13 @@ describe('AddTicketController', () => {
     expect(addTicketSpy.params).toEqual(httpRequest)
   })
 
+  test('should call Validation with correct value', async () => {
+    const { sut, validationSpy } = makeSut()
+    const httpRequest = mockRequest()
+    await sut.handle(httpRequest)
+    expect(validationSpy.input).toEqual(httpRequest)
+  })
+
   test('should return 500 if AddTicket throws', async () => {
     const { sut, addTicketSpy } = makeSut()
     jest.spyOn(addTicketSpy, 'add').mockImplementationOnce(() => { throw new Error() })
