@@ -8,13 +8,13 @@ export class AddTicketController implements Controller {
     private readonly validation: Validation
   ) { }
 
-  handle (request: AddTicketControllerRequest): HttpResponse {
+  async handle (request: AddTicketControllerRequest): Promise<HttpResponse> {
     try {
       const error = this.validation.validate(request)
       if (error !== null && error !== undefined) {
         return badRequest(error)
       }
-      this.addTicket.add(request)
+      await this.addTicket.add(request)
       return noContent()
     } catch (error) {
       return serverError(error as Error)
