@@ -33,4 +33,11 @@ describe('DbAddTicket Usecase', () => {
     await sut.add(ticketData)
     expect(addTicketRepositorySpy.params).toEqual(ticketData)
   })
+
+  test('Should throw if AddTicketRepository throws', async () => {
+    const { sut, addTicketRepositorySpy } = makeSut()
+    jest.spyOn(addTicketRepositorySpy, 'add').mockImplementationOnce(() => { throw new Error() })
+    const promise = sut.add(mockAddTicketParams())
+    await expect(promise).rejects.toThrow()
+  })
 })
