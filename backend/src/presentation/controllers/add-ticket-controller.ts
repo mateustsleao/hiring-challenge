@@ -25,6 +25,6 @@ export class AddTicketController implements Controller {
 export interface AddTicketControllerRequest {
   client: string
   issue: string
-  status: string
+  status: 'open' | 'closed'
   deadline: Date
 }

@@ -2,6 +2,6 @@ export interface TicketModel {
   id: string
   client: string
   issue: string
-  status: string
+  status: 'open' | 'closed'
   deadline: Date
 }
