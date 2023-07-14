@@ -1,6 +1,7 @@
 import { type AddTicket } from '@/domain/usecases/add-ticket'
-import { type Controller, type HttpResponse, type Validation } from '@/presentation/protocols'
+import { type Controller, type HttpResponse, type HttpRequest } from '@/presentation/protocols'
 import { badRequest, serverError, noContent } from '@/presentation/helpers'
+import { type Validation } from '@/validation/protocols'
 
 export class AddTicketController implements Controller {
   constructor (
@@ -8,25 +9,18 @@ export class AddTicketController implements Controller {
     private readonly validation: Validation
   ) { }
 
-  async handle (request: AddTicketControllerRequest): Promise<HttpResponse> {
+  async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const error = this.validation.validate(request)
+      const error = this.validation.validate(httpRequest.body)
       const hasError = error !== null && error !== undefined
 
       if (hasError) {
         return badRequest(error)
       }
-      await this.addTicket.add(request)
+      await this.addTicket.add(httpRequest.body)
       return noContent()
     } catch (error) {
       return serverError(error as Error)
     }
   }
-}
-
-export interface AddTicketControllerRequest {
-  client: string
-  issue: string
-  status: 'open' | 'closed'
-  deadline: Date
 }

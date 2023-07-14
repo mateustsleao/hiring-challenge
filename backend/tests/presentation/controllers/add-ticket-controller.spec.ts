@@ -1,15 +1,18 @@
-import { AddTicketController, type AddTicketControllerRequest } from '@/presentation/controllers'
+import { AddTicketController } from '@/presentation/controllers'
+import { type HttpRequest } from '@/presentation/protocols'
 import { ValidationSpy, AddTicketSpy } from '@/tests/presentation/mocks'
 import { badRequest, noContent, serverError } from '@/presentation/helpers'
 import { faker } from '@faker-js/faker'
 
 import MockDate from 'mockdate'
 
-const mockRequest = (): AddTicketControllerRequest => ({
-  client: faker.person.firstName(),
-  issue: faker.lorem.sentence(),
-  status: 'open',
-  deadline: faker.date.soon()
+const mockRequest = (): HttpRequest => ({
+  body: {
+    client: faker.person.firstName(),
+    issue: faker.lorem.sentence(),
+    status: 'open',
+    deadline: faker.date.soon()
+  }
 })
 
 interface SutTypes {
@@ -45,14 +48,17 @@ describe('AddTicketController', () => {
     const { sut, addTicketSpy } = makeSut()
     const httpRequest = mockRequest()
     await sut.handle(httpRequest)
-    expect(addTicketSpy.params).toEqual(httpRequest)
+    expect(addTicketSpy.params?.client).toEqual(httpRequest.body.client)
+    expect(addTicketSpy.params?.issue).toEqual(httpRequest.body.issue)
+    expect(addTicketSpy.params?.status).toEqual(httpRequest.body.status)
+    expect(addTicketSpy.params?.deadline).toEqual(httpRequest.body.deadline)
   })
 
   test('should call Validation with correct value', async () => {
     const { sut, validationSpy } = makeSut()
     const httpRequest = mockRequest()
     await sut.handle(httpRequest)
-    expect(validationSpy.input).toEqual(httpRequest)
+    expect(validationSpy.input).toEqual(httpRequest.body)
   })
 
   test('should return 500 if AddTicket throws', async () => {

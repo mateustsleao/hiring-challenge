@@ -29,4 +29,11 @@ describe('Ticket Mongo Repository', () => {
     const isValid = await sut.add(mockAddTicketParams())
     expect(isValid).toBe(true)
   })
+  test('Should return an ticket on load success', async () => {
+    const sut = makeSut()
+    await sut.add(mockAddTicketParams())
+    const ticket = await sut.loadAll()
+    expect(ticket).toBeTruthy()
+    expect(ticket.length).toBe(1)
+  })
 })

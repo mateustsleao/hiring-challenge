@@ -1,40 +1,11 @@
-import express from 'express'
-// import mongoose from 'mongoose'
-// import { MongoMemoryServer } from 'mongodb-memory-server'
+import 'module-alias/register'
+import env from '@/main/config/env'
+import { MongooseHelper } from '@/infra/db'
 
-// const start = async () => {
-//   try {
-//     // Creating the mongoDB memory server
-//     const mongoServer = await MongoMemoryServer.create()
-
-//     // Connecting to the mongoDB memory server using mongoose
-//     await mongoose.connect(mongoServer.getUri(), { dbName: 'notificationsDB' })
-
-//     // Creating the express app
-//     const app = express()
-//     app.use(express.json())
-
-//     // Starting the server
-//     await new Promise<void>((resolve, reject) => {
-//       app.listen(3000, resolve).on('error', reject)
-//     })
-//     console.log('Server started at http://localhost:3000')
-//   } catch (error: unknown) {
-//     console.log(error)
-//     process.exit(1)
-//   }
-// }
-
-// process.on('beforeExit', async () => {
-//   await mongoose.disconnect()
-//   console.log('mongoose disconnected')
-// })
-
-// if (require.main === module) {
-//   start()
-// }
-
-// export { start }
-
-const app = express()
-app.listen(3000, () => { console.log('Server started at http://localhost:3000') })
+MongooseHelper.connect(env.mongoUrl, { dbName: 'notificationsDB' })
+  .then(async () => {
+    const { setupApp } = await import('./config/app')
+    const app = await setupApp()
+    app.listen(5050, () => { console.log('Server running at http://localhost:5050') })
+  })
+  .catch(console.error)

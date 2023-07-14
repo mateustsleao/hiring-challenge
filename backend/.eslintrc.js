@@ -12,7 +12,9 @@ module.exports = {
     "project": "./tsconfig.json",
     "tsconfigRootDir": __dirname,
   },
-  "rules": {},
+  "rules": {
+    "@typescript-eslint/no-misused-promises": "off"
+  },
   'ignorePatterns': [
     '.eslintrc.js',
     'jest-unit-config.js',
