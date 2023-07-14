@@ -49,10 +49,10 @@ regarded.
 - I also tried to use atomic commits for consistency and use a standard for [commits](https://www.conventionalcommits.org/en/v1.0.0/).
 
 ### Further implementations
-Unfortunately, I didn't finish all the requirements, but the next steps for the project is:
-[] Finish the API routes
-[] Implements Docker  compose
-[] Implements CI/CD tools (like travis and coveralls) beyond husky and lint-staged. 
-[] Documents the backend with Swagger.
+Unfortunately, I didn't finish all the requirements, but the next steps for the project are:
+- [ ] Finish the API routes
+- [ ] Implements Docker  compose
+- [ ] Implements CI/CD tools (like travis and coveralls) beyond husky and lint-staged. 
+- [ ] Documents the backend with Swagger.
 
 Thank you for your consideration and time.
