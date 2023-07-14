@@ -15,6 +15,11 @@ describe('Ticket Mongo Repository', () => {
     await mongoServer.stop()
   })
 
+  beforeEach(async () => {
+    const TicketModel = MongooseHelper.getModel('Ticket')
+    await TicketModel.deleteMany({})
+  })
+
   const makeSut = (): TicketMongoRepository => {
     return new TicketMongoRepository()
   }
