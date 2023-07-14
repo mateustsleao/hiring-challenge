@@ -6,12 +6,12 @@ Your task is to build a Support Ticket System application that allows users to c
 
 1. Backend:
 
-   - [ ] Use TypeScript, MongoDB, Mongoose, and Express.js to create a RESTful API.
+   - [x] Use TypeScript, MongoDB, Mongoose, and Express.js to create a RESTful API.
    - [ ] Implement the following endpoints:
-     - [ ] GET `/tickets`: Retrieve a list of all tickets sorted by deadline desc.
+     - [x] GET `/tickets`: Retrieve a list of all tickets sorted by deadline desc.
      - [ ] POST `/tickets`: Create a new ticket.
      - [ ] PUT `/tickets/{id}`: Update the ticket.
-   - [ ] Each ticket should have the following properties: `client`, `issue`, `status('open', 'closed')` and `deadline`.
+   - [x] Each ticket should have the following properties: `client`, `issue`, `status('open', 'closed')` and `deadline`.
 
 2. Frontend:
 
@@ -32,13 +32,13 @@ Your task is to build a Support Ticket System application that allows users to c
 
 3. General Requirements:
 
-   - [ ] Use appropriate error handling and validation techniques throughout the application.
-   - [ ] Write clean and maintainable code, following SOLID principles and design patterns.
+   - [x] Use appropriate error handling and validation techniques throughout the application.
+   - [x] Write clean and maintainable code, following SOLID principles and design patterns.
    - [ ] Provide clear instructions on how to set up and run the application.
 
 4. Extra
 
-   - [ ] Include unit tests for critical parts of the application (e.g., API endpoints, data validation).
+   - [x] Include unit tests for critical parts of the application (e.g., API endpoints, data validation).
    - [ ] Containerise both apllications using docker
    - [ ] Provide a docker compose file to spin up the application locally.
 
