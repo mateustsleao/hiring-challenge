@@ -1,24 +1,24 @@
+import { MongooseHelper, TicketMongoRepository } from '@/infra/db'
 import { mockAddTicketParams } from '@/tests/domain/mocks'
-import { MongoMemoryServer } from 'mongodb-memory-server'
-import { MongooseHelper, TicketMongoRepository } from '@/infra/db/mongodb'
+import { mockMongo } from '@/tests/infra/db/mocks'
 
 describe('Ticket Mongo Repository', () => {
-  let mongoServer: MongoMemoryServer
+  const mongoServer = mockMongo()
+  const uri = mongoServer.then(res => res.getUri())
 
   beforeAll(async () => {
-    mongoServer = await MongoMemoryServer.create()
-    await MongooseHelper.connect(mongoServer.getUri(), { dbName: 'notificationsDB' })
+    await MongooseHelper.connect(await uri, { dbName: 'notificationsDB' })
   })
 
   afterAll(async () => {
     await MongooseHelper.disconnect()
-    await mongoServer.stop()
+    await (await mongoServer).stop()
   })
 
   beforeEach(async () => {
-    const TicketModel = MongooseHelper.getModel('Ticket')
+    const TicketModel = await MongooseHelper.getModel('Ticket', await uri)
     if (TicketModel === null) return
-    await TicketModel.deleteMany({})
+    await TicketModel?.deleteMany({})
   })
 
   const makeSut = (): TicketMongoRepository => {
@@ -27,13 +27,12 @@ describe('Ticket Mongo Repository', () => {
 
   test('Should return an ticket on add success', async () => {
     const sut = makeSut()
-    const isValid = await sut.add(mockAddTicketParams())
-    expect(isValid).toBe(true)
+    const params = mockAddTicketParams()
+    const result = await sut.add(params)
+    expect(result).toBeTruthy()
+    expect(result.id).toBeTruthy()
+    expect(result.client).toBe(params.client)
+    expect(result.status).toBe(params.status)
+    expect(result.deadline).toStrictEqual(params.deadline)
   })
-  // test('Should return an ticket on load success', async () => {
-  //   const sut = makeSut()
-  //   await sut.add(mockAddTicketParams())
-  //   const isValid = await sut.loadAll()
-  //   expect(isValid).toBeTruthy()
-  // }
 })
