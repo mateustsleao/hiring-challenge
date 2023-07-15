@@ -4,7 +4,7 @@ interface MongooseHelperType {
   client: mongoose.Mongoose | null
   connect: (uri: string, options?: mongoose.ConnectOptions | undefined) => Promise<void>
   disconnect: () => Promise<void>
-  getModel: (name: string) => mongoose.Model<mongoose.Document> | null
+  getModel: (name: string, uri: string) => Promise<void>
   map: (collection: any) => any
 }
 
@@ -22,13 +22,13 @@ const mongooseHelper: MongooseHelperType = {
     await this.client.disconnect()
     this.client = null
   },
-  getModel (name) {
-    if (this.client === null) return null
-    return this.client.model(name)
+  async getModel (name, uri) {
+    if (this.client === null) await this.connect(uri)
+    this.client?.model(name)
   },
-  map: (collection) => {
-    const { _id, ...collectionWithoutId } = collection
-    return Object.assign({}, collectionWithoutId, { id: _id })
+  map: (model) => {
+    const { _id, ...modelWithoutId } = model
+    return Object.assign({}, modelWithoutId, { id: _id })
   }
 }
 
