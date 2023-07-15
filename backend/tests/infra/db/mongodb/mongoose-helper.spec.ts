@@ -1,21 +1,16 @@
-import { MongooseHelper as sut } from '@/infra/db/mongodb'
-import { MongoMemoryServer } from 'mongodb-memory-server'
-// import { mockAddTicketParams } from '@/tests/domain/mocks'
-
-const makeDbStub = async (): Promise<string> => {
-  const mongo = await MongoMemoryServer.create()
-  return mongo.getUri()
-  //  mockAddTicketParams()
-}
-const uri = makeDbStub()
+import { MongooseHelper as sut } from '@/infra/db'
+import { mockMongo } from '@/tests/infra/db/mocks'
 
 describe('Mongoose Helper', () => {
+  const uri = mockMongo().then(mongoServer => mongoServer.getUri())
+
   beforeAll(async () => {
     await sut.connect(await uri)
   })
   afterAll(async () => {
     await sut.disconnect()
   })
+
   test('Should reconnect if mongodb is down', async () => {
     await sut.connect(await uri)
     let ticketModel = sut.getModel('Ticket', await uri)
