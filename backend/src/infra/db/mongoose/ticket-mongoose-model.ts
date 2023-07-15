@@ -22,8 +22,7 @@ const TicketSchema = new Schema<TicketDocument>(
       type: Date,
       required: true
     }
-  },
-  { timestamps: true }
+  }
 )
 
 export const TicketMongooseModel = mongoose.model<TicketDocument>('Ticket', TicketSchema)
