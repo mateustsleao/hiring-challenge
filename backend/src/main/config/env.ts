@@ -1,4 +1,4 @@
 export default {
-  mongoUrl: 'mongodb://localhost:27017/',
-  port: (process.env.PORT != null) || 5050
+  mongoUrl: 'mongodb+srv://mateustsleao:zTmrMKSaisXBacKz@ticket.cyjaxvc.mongodb.net/notificationsDB?retryWrites=true&w=majority',
+  port: 5050
 }

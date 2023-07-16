@@ -4,5 +4,7 @@ import { TicketMongoRepository } from '@/infra/db'
 
 export const makeDbAddTicket = (): AddTicket => {
   const ticketMongoRepository = new TicketMongoRepository()
-  return new DbAddTicket(ticketMongoRepository)
+  const dbAddTicket = new DbAddTicket(ticketMongoRepository)
+  console.log('dbAddTicket', dbAddTicket)
+  return dbAddTicket
 }

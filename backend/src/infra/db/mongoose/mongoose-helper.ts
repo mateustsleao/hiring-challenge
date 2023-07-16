@@ -6,7 +6,9 @@ const mongooseHelper = {
     if (this.client === null) {
       this.client = mongoose
     }
+    console.log('uri', uri)
     await this.client.connect(uri, options)
+    console.log('Connected to MongoDB')
   },
   async disconnect (): Promise<void> {
     if (this.client === null) return
@@ -29,8 +31,6 @@ const mongooseHelper = {
         return Object.assign({}, docWithoutId, { id: _id.toString() })
       }
     })
-
-    console.log('modelitous', model)
     return model
   }
 }
