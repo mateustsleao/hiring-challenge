@@ -5,7 +5,6 @@ import { TicketMongooseModel/*,  MongooseHelper */ } from '@/infra/db'
 export class TicketMongoRepository implements AddTicketRepository {
   async add (data: AddTicketRepositoryParams): Promise<void> {
     const TicketModel = new TicketMongooseModel(data)
-    console.log('TicketModel', TicketModel)
     await TicketModel.save()
     // console.log('result', result)
     // const resultMap = MongooseHelper.map(result)
