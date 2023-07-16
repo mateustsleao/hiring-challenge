@@ -14,7 +14,8 @@
     "start": "node dist/main/server.js",
     "start:dev": "nodemon --watch 'src/**/*.ts' --exec ts-node ./src/main/server.ts",
     "prepare": "cd .. && husky install backend/.husky",
-    "build": "rimraf dist && tsc -p tsconfig-build.json"
+    "build": "rimraf dist && tsc -p tsconfig-build.json",
+    "lint-staged": "lint-staged"
   },
   "keywords": [],
   "author": "",
