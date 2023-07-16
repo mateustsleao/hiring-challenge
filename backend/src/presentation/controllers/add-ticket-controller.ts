@@ -18,8 +18,6 @@ export class AddTicketController implements Controller {
         return badRequest(error)
       }
       await this.addTicket.add(httpRequest.body)
-      console.log('addTicket', this.addTicket)
-      console.log('httpRequest.body', httpRequest.body)
       return noContent()
     } catch (error) {
       return serverError(error as Error)
