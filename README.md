@@ -10,24 +10,24 @@ The backend was constructed inspired by the following principles:
 
 The Design Patterns used were:
 - **Factory** (Present through the application. One of the principles used was in the main layer Building process)
-- Adapter (Present through the application. One of the Clean architecture pillars)
-- Composite (for validation)
-- Dependency Injection (Present through the application. To decouple the components and respect the SOLID principles)
-- Abstract Server 
-- Builder 
-- Singleton (Present in abstraction server)
-- Decorator (Present in Application Logger)
+- **Adapter** (Present through the application. One of the Clean architecture pillars)
+- **Composite** (for validation)
+- **Dependency** Injection (Present through the application. To decouple the components and respect the SOLID principles)
+- **Abstract Server** 
+- **Builder** 
+- **Singleton** (Present in abstraction server)
+- **Decorator** (Present in Application Logger)
 
 The project is divided into 2 principle parts (scr and tests). I choose this approach to facilitate my building process.
 
-The scr is divided into layers segregations.
+The **scr** is divided into layers segregations.
 
 ### 1) Domain Layer
   Define the critical business rules of a domain. In our context, the ticket model with all the necessary information.
 
   This layer is also composed of Use Cases.
 
-  The use cases contain all the application business rules. This abstraction is responsible for encapsulating and implementing all the use cases of the system. In our context, I created two of them: *add-ticket* and *load-tickets*
+  The use cases contain all the application business rules. This abstraction is responsible for encapsulating and implementing all the use cases of the system. In our context, I created two of them: **add-ticket** and **load-tickets**
 
   Finally, the Domain layer doesn't have a dependency on external layers. But 2 other layers have a relation with it: The data layer and the presentation layer.
   
