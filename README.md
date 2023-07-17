@@ -9,26 +9,29 @@ The backend was constructed inspired by the following principles:
 - SOLID
 
 The Design Patterns used were:
-- Factory
-- Adapter
-- Composite
-- Dependency Injection
-- Abstract Server
-- Builder
-- Singleton
+- Factory (Present through the application. One of the principles used was in the main layer Building process)
+- Adapter (Present through the application. One of the Clean architecture pillars)
+- Composite (for validation)
+- Dependency Injection (Present through the application. To decouple the components and respect the SOLID principles)
+- Abstract Server 
+- Builder 
+- Singleton (Present in abstraction server)
+- Decorator (Present in the Logger)
 
-The project is divided into 2 principle parts (scr and tests). The scr is divided into layers segregations.
+The project is divided into 2 principle parts (scr and tests). I choose this approach to facilitate my building process.
+
+The scr is divided into layers segregations.
 
 ### 1) Domain Layer
   Define the critical business rules of a domain. In our context, the ticket model with all the necessary information.
 
   This layer is also composed of Use Cases.
 
-  The use cases contain all the application business rules. This abstraction is responsible for encapsulating and implementing all the use cases of the system. Also,
-  can be described by the high-level user operations.
+  The use cases contain all the application business rules. This abstraction is responsible for encapsulating and implementing all the use cases of the system.
+  Also, can be described by the high-level user operations.
 
   Finally, the Domain layer doesn't have a dependency on external layers. But 2 other layers have a relation with it: The data layer and the presentation layer.
-
+  
 ### 2) Data Layer
   The main objective for the data Layer is to provide a dependency injection for the domain layer and the infra layer (more external layer).
   For example, the DbAddTicket implements an interface called AddTicketRepo (A repo for the use-case AddTicket). Furthermore, the TicketMongoRepo also implements
