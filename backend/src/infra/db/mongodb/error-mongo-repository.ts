@@ -1,4 +1,4 @@
-import { type LogErrorRepository } from '@/data/protocols/db'
+import { type LogErrorRepository } from '@/data/protocols/db/log'
 import { LogErrorMongooseRepository } from '@/infra/db/mongoose'
 
 export class LogErrorMongoRepository implements LogErrorRepository {

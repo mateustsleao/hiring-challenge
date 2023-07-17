@@ -1,5 +1,5 @@
 import { makeAddTicketValidation } from '@/main/factories'
-import { ValidationComposite, RequiredFieldValidation } from '@/validation/validators'
+import { ValidationComposite, RequiredFieldValidation, InvalidFieldValidation } from '@/validation/validators'
 import { type Validation } from '@/validation/protocols'
 
 jest.mock('@/validation/validators/validation-composite')
@@ -11,6 +11,7 @@ describe('AddTicketValidation Factory', () => {
     for (const field of ['client', 'issue', 'status', 'deadline']) {
       validations.push(new RequiredFieldValidation(field))
     }
+    validations.push(new InvalidFieldValidation('status', ['open', 'closed']))
     expect(ValidationComposite).toHaveBeenCalledWith(validations)
   })
 })

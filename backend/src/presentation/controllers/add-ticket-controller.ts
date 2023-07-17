@@ -7,14 +7,16 @@ export class AddTicketController implements Controller {
   constructor (
     private readonly addTicket: AddTicket,
     private readonly validation: Validation
-  ) { }
+  ) {
+    this.addTicket = addTicket
+    this.validation = validation
+  }
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const error = this.validation.validate(httpRequest.body)
-      const hasError = error !== null && error !== undefined
-
-      if (hasError) {
+      const isError = error !== null && error !== undefined
+      if (isError) {
         return badRequest(error)
       }
       await this.addTicket.add(httpRequest.body)

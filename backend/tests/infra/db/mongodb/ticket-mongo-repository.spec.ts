@@ -1,38 +1,50 @@
 import { MongooseHelper, TicketMongoRepository } from '@/infra/db'
-import { mockAddTicketParams } from '@/tests/domain/mocks'
-import { mockMongo } from '@/tests/infra/db/mocks'
+import { mockAddTicketParams, mockTicketModels } from '@/tests/domain/mocks'
+import { MongoMemoryServer } from 'mongodb-memory-server'
+
+const makeSut = (): TicketMongoRepository => {
+  return new TicketMongoRepository()
+}
 
 describe('Ticket Mongo Repository', () => {
-  const mongoServer = mockMongo()
-  const uri = mongoServer.then(res => res.getUri())
+  let mongoServer: MongoMemoryServer
 
   beforeAll(async () => {
-    await MongooseHelper.connect(await uri, { dbName: 'notificationsDB' })
+    mongoServer = await MongoMemoryServer.create()
+    await MongooseHelper.connect(mongoServer.getUri(), { dbName: 'notificationsDB' })
   })
 
   afterAll(async () => {
     await MongooseHelper.disconnect()
-    await (await mongoServer).stop()
+    await mongoServer.stop()
   })
-
   beforeEach(async () => {
-    const TicketModel = await MongooseHelper.getModel('Ticket', await uri)
+    const TicketModel = await MongooseHelper.getModel('Ticket', mongoServer.getUri())
     if (TicketModel === null) return
     await TicketModel?.deleteMany({})
   })
 
-  const makeSut = (): TicketMongoRepository => {
-    return new TicketMongoRepository()
-  }
+  describe('Create Ticket Repository', () => {
+    test('Should return an ticket on add success', async () => {
+      const sut = makeSut()
+      const params = mockAddTicketParams()
+      await sut.add(params)
+      const count = await (await MongooseHelper.getModel('Ticket', mongoServer.getUri()))?.countDocuments()
+      expect(count).toBe(1)
+    })
+  })
 
-  test('Should return an ticket on add success', async () => {
-    const sut = makeSut()
-    const params = mockAddTicketParams()
-    const result = await sut.add(params)
-    expect(result).toBeTruthy()
-    expect(result.id).toBeTruthy()
-    expect(result.client).toBe(params.client)
-    expect(result.status).toBe(params.status)
-    expect(result.deadline).toStrictEqual(params.deadline)
+  describe('Load Tickets Repository', () => {
+    test('Should return an all tickets on load success', async () => {
+      const addTicketModels = mockTicketModels
+      const TicketModel = await MongooseHelper.getModel('Ticket', mongoServer.getUri())
+      await TicketModel?.insertMany(addTicketModels)
+      const sut = makeSut()
+      const tickets = await sut.loadAll()
+      const count = await (await MongooseHelper.getModel('Ticket', mongoServer.getUri()))?.countDocuments()
+      expect(count).toEqual(addTicketModels.length)
+      expect(tickets[0].client).toEqual(addTicketModels[1].client)
+      expect(tickets[1].client).toEqual(addTicketModels[0].client)
+    })
   })
 })

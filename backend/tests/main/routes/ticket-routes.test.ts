@@ -1,76 +1,61 @@
-// import { MongooseHelper } from '@/infra/db'
-// import { setupApp } from '@/main/config/app'
-// import { MongoMemoryServer } from 'mongodb-memory-server'
-// import { type Express } from 'express'
-// import request from 'supertest'
-// import { faker } from '@faker-js/faker'
+import { MongooseHelper } from '@/infra/db'
+import { setupApp } from '@/main/config/app'
+import { type Express } from 'express'
+import request from 'supertest'
+import { MongoMemoryServer } from 'mongodb-memory-server'
 
-// let app: Express
-// let mongoServer: MongoMemoryServer
+import { faker } from '@faker-js/faker'
 
-// describe('Ticket Routes', () => {
-//   beforeAll(async () => {
-//     app = await setupApp()
-//     mongoServer = await MongoMemoryServer.create()
-//     await MongooseHelper.connect(mongoServer.getUri(), { dbName: 'notificationsDB' })
-//   })
+let mongoServer: MongoMemoryServer
+let app: Express
 
-//   afterAll(async () => {
-//     await MongooseHelper.disconnect()
-//   })
+describe('Ticket Routes', () => {
+  beforeAll(async () => {
+    mongoServer = await MongoMemoryServer.create()
+    await MongooseHelper.connect(mongoServer.getUri(), { dbName: 'notificationsDB' })
+    app = await setupApp()
+  })
+  afterAll(async () => {
+    await MongooseHelper.disconnect()
+    await mongoServer.stop()
+  })
 
-//   beforeEach(async () => {
-//     const TicketModel = MongooseHelper.getModel('Ticket')
-//     await TicketModel.deleteMany({})
-//   })
+  beforeEach(async () => {
+    const TicketModel = await MongooseHelper.getModel('Ticket', mongoServer.getUri())
+    if (TicketModel === null) return
+    await TicketModel?.deleteMany({})
+  })
 
-//   describe('POST /tickets', () => {
-//     test('Should return 400 on add ticket without some required values', async () => {
-//       await request(app)
-//         .post('/api/tickets')
-//         .send({
-//           client: 'Ana',
-//           issue: 'Issue',
-//           status: 'open'
-//         })
-//         .expect(400)
-//     })
+  describe('POST /tickets', () => {
+    test('should add a ticket with 204 status', async () => {
+      await request(app)
+        .post('/api/tickets')
+        .send({
+          client: 'John Doe',
+          issue: 'My printer is on fire',
+          status: 'open',
+          deadline: new Date()
+        })
+        .expect(204)
+    })
+    test('should return 400 on add ticket without some required values', async () => {
+      await request(app)
+        .post('/api/tickets')
+        .send({
+          client: faker.person.fullName(),
+          issue: faker.lorem.sentence(),
+          status: 'open'
+        })
+        .expect(400)
+    })
+  })
 
-//     test('Should return 200 on add ticket with all required values', async () => {
-//       await request(app)
-//         .post('/api/tickets')
-//         .send({
-//           client: 'Ana',
-//           issue: 'Issue',
-//           status: 'open',
-//           deadline: faker.date.soon()
-//         })
-//         .expect(200)
-//     })
-//   })
-
-//   describe('GET /tickets', () => {
-//     test('Should return 400 on add ticket without some required values', async () => {
-//       await request(app)
-//         .get('/api/tickets')
-//         .send({
-//           client: 'Ana',
-//           issue: 'Issue',
-//           status: 'open'
-//         })
-//         .expect(400)
-//     })
-
-//     test('Should return 200 on add ticket with all required values', async () => {
-//       await request(app)
-//         .get('/api/tickets')
-//         .send({
-//           client: 'Ana',
-//           issue: 'Issue',
-//           status: 'open',
-//           deadline: faker.date.soon()
-//         })
-//         .expect(200)
-//     })
-//   })
-// })
+  describe('GET /tickets', () => {
+    test('should return 204 on get tickets with all values', async () => {
+      await request(app)
+        .get('/api/tickets')
+        .send()
+        .expect(204)
+    })
+  })
+})

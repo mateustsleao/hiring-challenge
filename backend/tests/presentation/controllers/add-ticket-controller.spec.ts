@@ -1,19 +1,7 @@
 import { AddTicketController } from '@/presentation/controllers'
-import { type HttpRequest } from '@/presentation/protocols'
-import { ValidationSpy, AddTicketSpy } from '@/tests/presentation/mocks'
+import { ValidationSpy, AddTicketSpy, mockRequest } from '@/tests/presentation/mocks'
 import { badRequest, noContent, serverError } from '@/presentation/helpers'
-import { faker } from '@faker-js/faker'
-
 import MockDate from 'mockdate'
-
-const mockRequest = (): HttpRequest => ({
-  body: {
-    client: faker.person.firstName(),
-    issue: faker.lorem.sentence(),
-    status: 'open',
-    deadline: faker.date.soon()
-  }
-})
 
 interface SutTypes {
   sut: AddTicketController
@@ -70,7 +58,7 @@ describe('AddTicketController', () => {
 
   test('should return 400 if Validation fails', async () => {
     const { sut, validationSpy } = makeSut()
-    validationSpy.error = new Error()
+    validationSpy.error = new Error('any_field')
     const httpResponse = await sut.handle(mockRequest())
     expect(httpResponse).toEqual(badRequest(validationSpy.error))
   })

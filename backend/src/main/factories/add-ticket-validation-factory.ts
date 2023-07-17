@@ -1,4 +1,4 @@
-import { ValidationComposite, RequiredFieldValidation } from '@/validation/validators'
+import { ValidationComposite, RequiredFieldValidation, InvalidFieldValidation } from '@/validation/validators'
 import { type Validation } from '@/validation/protocols'
 
 export const makeAddTicketValidation = (): ValidationComposite => {
@@ -6,5 +6,6 @@ export const makeAddTicketValidation = (): ValidationComposite => {
   for (const field of ['client', 'issue', 'status', 'deadline']) {
     validations.push(new RequiredFieldValidation(field))
   }
+  validations.push(new InvalidFieldValidation('status', ['open', 'closed']))
   return new ValidationComposite(validations)
 }
