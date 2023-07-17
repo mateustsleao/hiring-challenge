@@ -1,68 +1,113 @@
-# **Challenge: Building a Support Ticket System**
+# Challenge: Building a Support Ticket System
 ## Backend
 
-The main purpose of this implementation was to use all the solid, clean code and clean architecture principles, to build a scalable and maintainable system for a mid-long term.
+The main objective of this implementation was to apply SOLID principles, clean code practices, and clean architecture to build a scalable and maintainable system for the mid to long-term.
 
-The backend was constructed inspired by the following principles:
+The backend was developed with inspiration from the following principles:
 - Clean code
 - Clean architecture
 - SOLID
 
-The Design Patterns used were:
-- **Factory** (Present through the application. One of the principles used was in the main layer Building process)
-- **Adapter** (Present through the application. One of the Clean architecture pillars)
-- **Composite** (for validation)
-- **Dependency** Injection (Present through the application. To decouple the components and respect the SOLID principles)
-- **Abstract Server** 
-- **Builder** 
-- **Singleton** (Present in abstraction server)
-- **Decorator** (Present in Application Logger)
+The design patterns used in this project include:
+- **Factory** (Used throughout the application, especially in the main layer building process)
+- **Adapter** (Present throughout the application as one of the pillars of clean architecture)
+- **Composite** (Used for validation)
+- **Dependency Injection** (Applied to decouple components and respect SOLID principles)
+- **Abstract Server**
+- **Builder**
+- **Singleton** (Used in the abstraction server)
+- **Decorator** (Present in the Application Logger)
 
-The project is divided into 2 principle parts (scr and tests). I choose this approach to facilitate my building process.
+The project is divided into two main parts: `src` and `tests`. This approach was chosen to facilitate the building process.
 
-The **scr** is divided into layers segregations.
+The **src** directory is divided into different layers:
 
 ### 1) Domain Layer
-  Define the critical business rules of a domain. In our context, the ticket model with all the necessary information.
+This layer defines the critical business rules of the domain. In our context, it includes the ticket model with all the necessary information.
 
-  This layer is also composed of Use Cases.
+The domain layer also contains the Use Cases. These encapsulate and implement all the application's business rules. In our context, two use cases were created: **add-ticket** and **load-tickets**.
 
-  The use cases contain all the application business rules. This abstraction is responsible for encapsulating and implementing all the use cases of the system. In our context, I created two of them: **add-ticket** and **load-tickets**
+The Domain layer does not have dependencies on external layers. However, two other layers have relationships with it: the data layer and the presentation layer.
 
-  Finally, the Domain layer doesn't have a dependency on external layers. But 2 other layers have a relation with it: The data layer and the presentation layer.
-  
 ### 2) Data Layer
-  The main objective for the data Layer is to provide a dependency injection for the domain layer and the infra layer (more external layer) by following all the interface protocols and use-cases.
-  For example, the DbAddTicket implements an interface called AddTicketRepo (A repo for the use-case AddTicket). Furthermore, the TicketMongoRepo also implements the AddTicketRepo interface. This is useful for uncoupling the domain for external tools (like Mongoose, elasticSearch, or any other infra implementation).
-  Another detail about this layer is the fact that I created a separate Collection for Logger.
+The main objective of the data layer is to provide dependency injection for the domain layer and the infra layer (an external layer). This is achieved by following interface protocols and use cases.
+
+For example, `DbAddTicket` implements an interface called `AddTicketRepo`, which is a repository for the `AddTicket` use case. Additionally, `TicketMongoRepo` also implements the `AddTicketRepo` interface. This decouples the domain from external tools such as Mongoose, Elasticsearch, or any other infrastructure implementation.
+
+Another detail about this layer is that a separate collection for logging was created.
 
 ### 3) Infra Layer
-  Responsible for adapting our infra systems to our application.
-  
-### 3) Presentation Layer
-  I segregated controllers, errors, helpers, and protocols.
-  The presentation layer is responsible for providing our controllers for the Main Layer. So, they are responsible for implementing all the protocols and interfaces for our external entities and tools used. For example, uncoupling the Request and Response HTTP protocols with the Express.js HTTP protocols.
-  This is necessary because if in the mid-long term, the express lib became deprecated, we can just change the express adapter for another lib, and all our internal HTTP protocols are regarded.
-  
-### 4) Main layer
-  Responsible for fitting all the parts of the project basically with Factories Patterns. So, this Layer has connections with all the other layers, regarding the
-  Domain Layer.
-  Also, is very important to maintain this layer without any dependencies with other layers. So, The Presentation, Infra, Data, and Domain Layers can't have direct dependencies with the Main Layer.
-  I created a config folder for building the app, all the middleware, and the routes. And they are separated into another folder with their own responsibilities.
-  For this layer, I created an integration test (despite the unit test for all other layers).
-  I also created one Decorator example for the log controller (the main objective was not to have dependencies of the log into the controllers).
-  Finally, the factories' directory makes all the magic. The factors are responsible for building and integrating all the layers.
+This layer is responsible for adapting our infrastructure systems to our application.
 
-  
-### Other considerations.
-- For improving the consistency of the code, I designed one layer to do all the validations necessary using Composite Pattern.
-- Also, the *tests* folder contains all the unit and integrated tests used, with the TDD approach.
-- I also tried to use atomic commits for consistency and use a standard for [commits](https://www.conventionalcommits.org/en/v1.0.0/).
+### 4) Presentation Layer
+The presentation layer is responsible for providing controllers for the Main Layer. It implements protocols and interfaces for external entities and tools. For example, it decouples the Request and Response HTTP protocols from the Express.js HTTP protocols.
 
-### Further implementations
-Unfortunately, I didn't finish all the requirements, but the next steps for the project are:
-- [ ] Finish the route save-ticket-by-id
-- [ ] Implements CI/CD tools (like Travis and coveralls) beyond husky and lint-staged. 
-- [ ] Documents the backend with Swagger.
+This decoupling is necessary because if, in the mid to long term, the Express library becomes deprecated, we can easily replace the Express adapter with another library, and all our internal HTTP protocols remain intact.
+
+### 5) Main Layer
+The main layer is responsible for connecting all the parts of the project using Factory Patterns. It has connections with all the other layers, especially the Domain Layer.
+
+It is crucial to maintain this layer without any dependencies on other layers. The Presentation, Infra, Data, and Domain Layers should not have direct dependencies on the Main Layer.
+
+The `config` folder contains the app configuration, middleware, and routes. They are organized into separate folders with their own responsibilities.
+
+For this layer, an integration test was created (in addition to the unit tests for all other layers). A Decorator example was also implemented for the log controller to avoid dependencies of logging within the controllers.
+
+The magic happens in the `factories` directory, where the factories are responsible for building and integrating all the layers.
+
+### Other Considerations
+- To improve code consistency, I designed a separate layer using the Composite Pattern for all necessary validations.
+- The `tests` folder contains unit and integration tests implemented using the TDD approach.
+- Atomic commits were used for consistency, following a standard for [commits](https://www.conventionalcommits.org/en/v1.0.0/).
+
+## How to Run the Project
+To run the project locally, please follow these steps:
+
+1. Clone the repository to your local machine:
+   ```
+   git clone <repository-url>
+   ```
+
+2. Install the required dependencies:
+   ```
+   cd <project-folder>
+   npm install
+   ```
+
+3. Configure the environment variables. Create a `.env.local` file in the root of the project and provide the necessary configurations for the build using docker. For running locally, you can access the `backend/main/config/env.ts` and replace the `mongoUrl` and `port`  with yours variables.
+
+Here's an example if you have a MongoDB running locally:
+
+```
+export default {
+  mongoUrl: 'mongodb://127.0.0.1:27017/notificationsDB',
+  port: 5050
+}
+```
+
+If you want to connect with virtual MongoDB, I suggest the [Atlas MongoDB](https://www.mongodb.com/pt-br/cloud/atlas/efficiency) cloud service.
+
+4. Start the application:
+
+   ```
+   npm run build
+   ```
+
+   ```
+   npm run start
+   ```
+
+5. The backend should now be running on the specified port.
+
+
+Please note that you may need to adjust the configurations and environment variables according to your specific setup.
+
+### Further Implementations
+Unfortunately, not all the requirements were completed. The next steps for the project are as follows:
+- [ ] Finish the `save-ticket-by-id` route
+- [ ] Implement CI/CD tools (such as Travis and Coveralls) in addition to Husky and lint-staged
+- [ ] Document the backend using Swagger
+
+If you have any questions or need further assistance, please feel free to reach out.
 
 Thank you for your consideration and time.
