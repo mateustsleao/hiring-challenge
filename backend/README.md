@@ -1,4 +1,3 @@
-# **Challenge: Building a Support Ticket System**
 ## Backend
 
 The main purpose of this implementation was to use all the solid, clean code and clean architecture principles, to build a scalable and maintainable system for a mid-long term.
@@ -57,7 +56,3 @@ Unfortunately, I didn't finish all the requirements, but the next steps for the 
 - [ ] Documents the backend with Swagger.
 
 Thank you for your consideration and time.
-
-## FrontEnd
-
-Unfortunately, I didn't create the frontend yet.
