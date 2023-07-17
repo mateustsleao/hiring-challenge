@@ -92,7 +92,7 @@ If you want to connect with virtual MongoDB, I suggest the [Atlas MongoDB](https
    ```
    npm run build
    ```
-
+Then,
    ```
    npm run start
    ```
